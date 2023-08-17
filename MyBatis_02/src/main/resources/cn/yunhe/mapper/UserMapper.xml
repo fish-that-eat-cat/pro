@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yunhe.mapper.UserMapper">
+    <!--增-->
+    <insert id="addUser" parameterType="user">
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address});
+    </insert>
+    <!--删-->
+    <delete id="delUser" parameterType="int">
+        delete from user where id = #{id};
+    </delete>
+    <!--改-->
+    <update id="editUser" parameterType="user">
+        update user set username=#{username},birthday=#{birthday},sex=#{sex},address=#{address} where id=#{id} ;
+    </update>
+    <!--查-->
+    <select id="findAll" resultType="user">
+        select * from user;
+    </select>
+
+    <!--根据 名字和性别2条件查询-->
+    <select id="findBySelect" resultType="user">
+        select * from user where username=#{username} and sex=#{sex};
+    </select>
+
+    <select id="findBySelectMap" resultType="user">
+        select * from user where username=#{uname} and sex=#{usex};
+    </select>
+
+    <select id="findBySelectPOJO2" resultType="user" parameterType="user">
+        select * from user where username =#{username} and sex =#{sex}
+    </select>
+
+    <select id="findBySelectPOJO1" resultType="user" parameterType="QueryVo">
+        select * from user where username =#{user.username} and sex =#{user.sex}
+    </select>
+
+    <!--模糊查询 第二种方式-->
+    <select id="findByLike" resultType="user">
+        select * from user where username like '%' #{username} '%';
+    </select>
+
+    <!--多条件查询 if的运用-->
+    <select id="findSelectByLike" resultType="user" parameterType="user">
+        select * from  user
+        <where>
+            <if test="username!=null">
+               and username like '%' #{username} '%'
+            </if>
+            <if test="sex!=null">
+               and  sex=#{sex}
+            </if>
+        </where>
+    </select>
+
+    <!--添加成员，返回主键的方式-->
+    <insert id="addUserReturnKey" keyProperty="id" keyColumn="id" useGeneratedKeys="true" parameterType="user">
+        insert into user (username,birthday,sex,address) values (#{username},#{birthday},#{sex},#{address});
+    </insert>
+
+    <!--选择更新 set的运用-->
+    <update id="updateUserById" parameterType="user">
+        update user
+        <set>
+            <if test="username!=null">
+                username=#{username}
+            </if>
+            <if test="birthday!=null">
+                birthday=#{birthday}
+            </if>
+            <if test="sex!=null">
+                sex=#{sex}
+            </if>
+            <if test="address!=null">
+                address=#{address}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!--批量删除  forEach的运用-->
+    <!--第一种用集合删除-->
+    <delete id="deleteAll" parameterType="list">
+        delete from user where id in
+        <foreach collection="list" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--第二种用数组删除-->
+    <delete id="deleteAll1" >
+        delete from user where id in
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--第三种用queryVo删除-->
+    <delete id="deleteAll2" parameterType="queryVo" >
+        delete from user where id in
+        <foreach collection="list" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
