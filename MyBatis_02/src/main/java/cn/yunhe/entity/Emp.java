@@ -8,7 +8,7 @@ public class Emp {
   private double salary;
   private String hiredate;
   private Integer deptno;
-
+  private String empName;
 
   public Integer getEmpno() {
     return empno;
