@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yunhe.mapper.DeptMapper">
+    <resultMap id="deptMap" type="dept" autoMapping="true">
+        <id column="deptno" property="deptno"></id>
+
+        <collection property="empList" ofType="emp" autoMapping="true" column="deptno"
+        fetchType="lazy" select="cn.yunhe.mapper.EmpMapper.findEmp">
+            <id property="empno" column="empno"></id>
+        </collection>
+    </resultMap>
+    <select id="findDept" resultMap="deptMap">
+        select * from dept where dname=#{dname};
+    </select>
+</mapper>
